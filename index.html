@@ -136,81 +136,29 @@
   </section>
   <section id="driveView" class="drive-view hidden" role="tabpanel" aria-labelledby="driveTab">
     <div class="section-heading"><div><p class="section-kicker">Respaldo y sincronización</p><h2>Google Drive</h2><p>Guarda los movimientos y categorías en un archivo de tu propio Drive y recupéralos cuando abras la app.</p></div></div>
-    <div class="drive-grid">    
-
+    <div class="drive-grid">
       <article class="panel drive-panel">
-  <div class="panel-head">
-    <div>
-      <h3>Conexión y sincronización</h3>
-      <p>Gestiona tus datos de Mi Balance desde tu cuenta de Google Drive.</p>
+        <div class="panel-head"><div><h3>Conexión y sincronización</h3><p>El archivo de datos se llamará “Mi Balance - datos.json”.</p></div></div>
+        <div class="drive-panel-body">
+          <div id="driveStatus" class="drive-status warn" role="status" aria-live="polite">Conecta tu cuenta de Google Drive para sincronizar tus datos.</div>
+          <input id="driveClientId" type="hidden" autocomplete="off" value="">
+          <label class="drive-check"><input id="driveAutoSync" type="checkbox" checked><span><strong>Intentar sincronizar al abrir la app.</strong><br>Si Google no permite la autorización silenciosa, se mostrará un aviso para conectar manualmente.</span></label>
+          <div class="drive-actions"><button id="connectDriveBtn" class="btn btn-primary" type="button">Conectar Google Drive</button><button id="syncDriveBtn" class="btn btn-secondary" type="button">Sincronizar ahora</button><button id="disconnectDriveBtn" class="btn btn-secondary" type="button">Desconectar</button></div>
+          <div class="drive-actions" style="margin-top:10px"><button id="exportBackupBtn" class="btn btn-secondary" type="button">↓ Descargar respaldo completo</button><button id="importBackupBtn" class="btn btn-secondary" type="button">↑ Importar respaldo JSON</button><input id="importBackupInput" class="hidden" type="file" accept="application/json,.json"></div>
+          <p class="drive-foot">El respaldo JSON incluye todos los movimientos y las categorías personalizadas. Úsalo para trasladar los datos al navegador nuevo antes de activar Drive.</p>
+          <div id="driveLastSync" class="drive-last-sync">Todavía no se ha sincronizado con Drive.</div>
+          <p class="drive-foot">La app no almacena la contraseña de Google ni guarda el token de acceso permanente. Cuando Google no permite renovar el acceso en segundo plano, tendrás que pulsar “Conectar y sincronizar”.</p>
+        </div>
+      </article>
+      <article class="panel drive-panel">
+        <div class="panel-head"><div><h3>Tu información, tu cuenta</h3><p>Conecta tu cuenta personal de Google para guardar tus movimientos en tu propio Drive. Mi Balance no necesita mostrar datos técnicos para sincronizar.</p></div></div>
+      </article>
     </div>
-  </div>
-
-  <div class="drive-panel-body">
-    <div id="driveStatus" class="drive-status warn"
-         role="status" aria-live="polite">
-      Conecta tu cuenta de Google Drive para sincronizar tus datos.
-    </div>
-
-    <input id="driveClientId" type="hidden"
-           autocomplete="off" value="">
-
-    <div class="drive-check">
-      <label for="driveAutoSync">
-        <strong>Sincronización automática</strong>
-      </label>
-      <label class="drive-check">
-        <input id="driveAutoSync" type="checkbox" checked>
-        <span>Intentar sincronizar al abrir la app.</span>
-      </label>
-      <p class="drive-foot">
-        Si Google solicita autorización, podrás conectar tu cuenta manualmente.
-      </p>
-    </div>
-
-    <div class="drive-actions">
-      <button id="connectDriveBtn" class="btn btn-primary"
-              type="button">Conectar Google Drive</button>
-      <button id="syncDriveBtn" class="btn btn-secondary"
-              type="button">Sincronizar ahora</button>
-      <button id="disconnectDriveBtn" class="btn btn-secondary"
-              type="button">Desconectar</button>
-    </div>
-
-    <div id="driveLastSync" class="drive-last-sync">
-      Todavía no se ha sincronizado con Drive.
-    </div>
-
-    <details class="drive-backup">
-      <summary>Respaldo y recuperación de datos</summary>
-      <p class="drive-foot">
-        Guarda tus movimientos y categorías en un archivo JSON
-        o importa un respaldo existente.
-      </p>
-      <div class="drive-actions">
-        <button id="exportBackupBtn" class="btn btn-secondary"
-                type="button">↓ Descargar respaldo completo</button>
-        <button id="importBackupBtn" class="btn btn-secondary"
-                type="button">↑ Importar respaldo JSON</button>
-        <input id="importBackupInput" class="hidden"
-               type="file" accept="application/json,.json">
-      </div>
-    </details>
-  </div>
-</article>
-
-<article class="panel drive-panel">
-  <div class="panel-head">
-    <div>
-      <h3>Tu información, tu cuenta</h3>
-      <p>
-        Tus movimientos se sincronizan con tu propio Google Drive.
-        Administra la conexión desde los botones anteriores.
-      </p>
-    </div>
-  </div>
-</article>
-
+  </section>
+  <footer class="footer-note"><span class="privacy" id="privacyNote">▣ Tus datos quedan guardados en este navegador.</span><span>Mi Balance · Control personal</span></footer>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
 (function(){
   'use strict';
   const STORAGE_KEY = 'miBalance.transactions.v1';
@@ -502,7 +450,7 @@
   }
   async function initializeDriveTokenClient(){
     const clientId=$('driveClientId').value.trim()||localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)||'';
-    if(!clientId)throw new Error('No está disponible la configuración de Google Drive. Contacta al administrador de la aplicación.');
+    if(!clientId)throw new Error('Primero agrega y guarda el ID de cliente OAuth de Google.');
     if(driveTokenClient&&driveTokenClientId===clientId)return;
     await loadGoogleIdentity();
     driveTokenClientId=clientId;
