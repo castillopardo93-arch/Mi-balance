@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#102a43">
+<meta name="description" content="Controla tus ingresos, gastos, categorías y balance mensual en pesos chilenos.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Balance">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<title>Mi Balance — Control de ingresos y gastos</title>
+<style>
+:root{--navy:#102a43;--navy2:#183f5b;--teal:#087f8c;--mint:#d8f3ed;--green:#16845b;--green-bg:#e7f7ef;--red:#c24148;--red-bg:#fff0f0;--ink:#172b3a;--muted:#657786;--line:#e2eaf0;--paper:#f4f7fa;--white:#fff;--shadow:0 8px 24px rgba(16,42,67,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:0 auto;padding:calc(30px + env(safe-area-inset-top)) 24px calc(42px + env(safe-area-inset-bottom))}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:27px}.brand{display:flex;align-items:center;gap:13px}.brandmark{display:grid;place-items:center;width:47px;height:47px;background:var(--navy);border-radius:15px;color:white;font-size:23px;box-shadow:0 7px 15px rgba(16,42,67,.18)}h1{font-size:25px;letter-spacing:-.6px;margin:0;font-weight:760}.subtitle{margin:4px 0 0;color:var(--muted);font-size:13px}.top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.month-wrap{display:flex;align-items:center;gap:9px;background:white;border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--muted);font-size:12px}.month-wrap input{border:0;outline:0;color:var(--ink);font-weight:650;background:transparent}.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,opacity .15s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--teal);color:white;box-shadow:0 5px 12px rgba(8,127,140,.18)}.btn-secondary{background:#fff;border:1px solid var(--line);color:var(--navy)}.btn-small{padding:7px 10px;border-radius:8px;font-size:12px}.hero{background:linear-gradient(115deg,#102a43 0%,#17465e 68%,#0a747d 100%);border-radius:22px;padding:25px 29px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:250px;height:250px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:11%;top:-145px;box-shadow:0 0 0 28px rgba(255,255,255,.025),0 0 0 56px rgba(255,255,255,.025)}.hero-copy,.hero-total{position:relative;z-index:1}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.25px;color:#b5d7de;font-weight:750}.hero h2{font-size:15px;margin:8px 0 5px;font-weight:600;color:#e5f1f5}.hero-amount{font-size:clamp(30px,4vw,41px);font-weight:800;letter-spacing:-1.2px;line-height:1.2}.hero-note{margin-top:8px;color:#c4e0e4;font-size:12px}.hero-total{text-align:right;min-width:170px}.hero-total .small-label{font-size:12px;color:#c4e0e4}.hero-total .big-number{font-weight:750;font-size:20px;margin-top:7px}.positive{color:#a6f0cc!important}.negative{color:#ffc3c3!important}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px}.stat{padding:19px 20px;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);min-width:0}.stat-top{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;font-weight:650}.stat-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:17px}.income-icon{background:var(--green-bg);color:var(--green)}.expense-icon{background:var(--red-bg);color:var(--red)}.balance-icon{background:#e9f3ff;color:#2465a3}.stat-number{font-size:clamp(21px,2.4vw,28px);font-weight:790;letter-spacing:-.7px;margin-top:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat-foot{font-size:11px;color:#82909b;margin-top:5px}.content-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr);gap:20px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:21px 22px 16px}.panel-head h3{font-size:15px;margin:0;font-weight:760;letter-spacing:-.2px}.panel-head p{font-size:12px;color:var(--muted);margin:5px 0 0}.search{width:195px;max-width:45%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;outline:none;background:#fbfcfd}.search:focus,.field input:focus,.field select:focus{border-color:#65b9be;box-shadow:0 0 0 3px rgba(8,127,140,.09)}.table-wrap{overflow-x:auto}.table{width:100%;border-collapse:collapse;white-space:nowrap}.table th{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#83919c;font-weight:750;text-align:left;padding:11px 22px;border-top:1px solid #edf1f4;border-bottom:1px solid #edf1f4;background:#fbfcfd}.table td{padding:14px 22px;border-bottom:1px solid #eef2f5;font-size:12px}.table tbody tr:last-child td{border-bottom:0}.detail{display:flex;align-items:center;gap:10px;min-width:165px}.cat-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;background:#f0f5f8;font-size:16px}.detail-main{font-weight:700;color:var(--ink);font-size:12px;max-width:205px;overflow:hidden;text-overflow:ellipsis}.detail-sub{font-size:11px;color:#8a98a4;margin-top:4px}.type-pill{display:inline-block;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:750}.type-income{background:var(--green-bg);color:var(--green)}.type-expense{background:var(--red-bg);color:var(--red)}.amount{font-weight:750;text-align:right!important}.amount-income{color:var(--green)}.amount-expense{color:var(--red)}.actions{display:flex;gap:5px}.icon-btn{border:1px solid var(--line);background:white;color:#697c89;border-radius:7px;width:28px;height:28px;display:grid;place-items:center}.icon-btn:hover{background:#f1f7f8;color:var(--teal)}.empty{padding:40px 20px 43px;text-align:center;color:var(--muted)}.empty-symbol{width:54px;height:54px;border-radius:17px;background:#edf6f6;margin:0 auto 13px;display:grid;place-items:center;font-size:24px}.empty b{display:block;color:var(--ink);font-size:13px;margin-bottom:6px}.empty p{font-size:12px;margin:0 auto 16px;max-width:260px;line-height:1.6}.side-stack{display:grid;gap:20px}.breakdown{padding:0 22px 23px}.donut-row{display:flex;align-items:center;gap:19px;padding:5px 0 20px}.donut{width:104px;height:104px;flex:0 0 104px;border-radius:50%;display:grid;place-items:center;position:relative;background:#eaf0f4}.donut:after{content:"";position:absolute;inset:13px;border-radius:50%;background:white}.donut-inner{z-index:1;text-align:center}.donut-total{font-size:15px;font-weight:800;letter-spacing:-.5px}.donut-caption{font-size:9px;color:var(--muted);margin-top:3px}.legend{display:grid;gap:9px;flex:1;min-width:0}.legend-item{display:flex;justify-content:space-between;gap:8px;font-size:11px}.legend-name{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.legend-value{font-weight:750;white-space:nowrap}.category-list{display:grid;gap:14px}.category-line-head{display:flex;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:7px}.category-label{display:flex;align-items:center;gap:7px;min-width:0}.category-label span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.category-value{font-weight:750;white-space:nowrap}.bar-track{height:6px;background:#edf1f4;border-radius:10px;overflow:hidden}.bar-fill{height:100%;border-radius:10px}.muted-message{font-size:12px;color:var(--muted);padding:4px 0 8px;line-height:1.5}.form-panel{margin-bottom:20px;display:none}.form-panel.open{display:block}.form-grid{padding:0 22px 22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:7px;min-width:0}.field label{font-size:11px;font-weight:750;color:#536674}.field input,.field select{width:100%;border:1px solid #dfe7ec;border-radius:10px;background:#fff;padding:11px 12px;outline:0;color:var(--ink);min-height:41px}.field input::placeholder{color:#9ba8b2}.field-wide{grid-column:span 2}.type-toggle{display:flex;gap:7px}.type-choice{flex:1;border:1px solid var(--line);border-radius:9px;background:white;padding:10px 8px;color:var(--muted);font-size:12px;font-weight:700}.type-choice.active.income-choice{border-color:#83d1ac;background:#effaf4;color:var(--green)}.type-choice.active.expense-choice{border-color:#efa0a3;background:#fff3f3;color:var(--red)}.form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:9px;padding-top:3px}.footer-note{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#86949e;font-size:11px;padding:19px 2px 0}.privacy{display:flex;align-items:center;gap:6px}.toast{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));right:22px;background:#102a43;color:white;padding:12px 16px;border-radius:11px;box-shadow:0 10px 28px #102a4335;font-size:12px;font-weight:650;z-index:20;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateY(0)}.hidden{display:none!important}
+
+.dashboard-section{margin:0 0 23px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin:0 2px 14px}.section-heading h2{font-size:20px;letter-spacing:-.45px;margin:3px 0 0;font-weight:800}.section-heading p{margin:5px 0 0;font-size:12px;color:var(--muted)}.section-kicker{font-size:10px!important;text-transform:uppercase;letter-spacing:1.15px;font-weight:800;color:var(--teal)!important}.dashboard-period{font-size:11px;font-weight:750;color:var(--navy);background:#e7f3f5;padding:8px 11px;border-radius:9px;white-space:nowrap}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.9fr);gap:18px;align-items:stretch}.dashboard-panel-head{padding-bottom:12px}.dashboard-panel-head h3{font-size:14px}.trend-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.trend-legend span{display:inline-flex;align-items:center;gap:6px}.legend-dot{width:8px;height:8px;border-radius:3px;display:inline-block}.legend-income{background:#16845b}.legend-expense{background:#e6a23c}.trend-chart{display:flex;align-items:stretch;gap:10px;padding:16px 20px 18px;overflow-x:auto}.trend-month{flex:1 0 43px;min-width:43px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:170px}.trend-bars{height:119px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:5px;border-bottom:1px solid #e9eef2;padding:0 3px}.trend-bar{width:min(17px,38%);min-width:8px;border-radius:5px 5px 2px 2px;transition:height .2s ease}.trend-bar.income-bar{background:#16845b}.trend-bar.expense-bar{background:#e6a23c}.trend-month-label{font-size:10px;color:var(--muted);text-transform:capitalize}.trend-balance{font-size:9px;color:var(--navy);font-weight:750;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.trend-footnote{padding:0 21px 17px;font-size:10px;color:#8a98a4}.insights-list{padding:0 21px 18px;display:grid;gap:0}.insight-row{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid #eef2f5}.insight-row:last-child{border-bottom:0}.insight-icon{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#edf6f6;color:var(--teal);font-size:15px}.insight-label{font-size:10px;color:var(--muted);margin-bottom:4px}.insight-value{font-size:12px;font-weight:780;line-height:1.35;overflow-wrap:anywhere}.insight-detail{font-size:10px;color:#86949e;margin-top:3px;line-height:1.4}.insight-positive{color:var(--green)}.insight-negative{color:var(--red)}.insight-neutral{color:var(--navy)}
+
+@media(max-width:850px){.dashboard-grid{grid-template-columns:1fr}.app{padding:22px 16px 30px}.content-grid{grid-template-columns:1fr}.side-stack{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start}.top-actions{justify-content:flex-end}.hero{padding:23px}.hero-total{min-width:130px}}
+@media(max-width:560px){.section-heading{align-items:flex-start}.section-heading h2{font-size:18px}.dashboard-period{margin-top:4px}.trend-chart{padding-left:14px;padding-right:14px}.insights-list{padding-left:16px;padding-right:16px}.topbar{display:block}.top-actions{justify-content:flex-start;margin-top:18px}.month-wrap{flex:1}.top-actions .btn{flex:1}.hero{display:block}.hero-total{text-align:left;margin-top:20px;border-top:1px solid #ffffff22;padding-top:16px}.stats{grid-template-columns:1fr;gap:10px}.stat{padding:15px 17px}.stat-number{margin-top:8px}.side-stack{grid-template-columns:1fr}.panel-head{padding:18px 16px 14px}.table th,.table td{padding-left:13px;padding-right:13px}.table th:first-child,.table td:first-child{padding-left:16px}.search{max-width:52%;width:180px}.form-grid{padding:0 16px 18px;gap:12px}.field-wide{grid-column:span 2}.footer-note{align-items:flex-start;flex-direction:column}.app{padding-top:calc(17px + env(safe-area-inset-top));padding-left:15px;padding-right:15px;padding-bottom:calc(24px + env(safe-area-inset-bottom))}h1{font-size:23px}}
+
+.app-nav{display:flex;gap:8px;border-bottom:1px solid var(--line);padding:0 0 14px;margin:-7px 0 24px}
+.nav-tab{border:1px solid transparent;background:transparent;color:var(--muted);font-size:12px;font-weight:750;padding:10px 14px;border-radius:10px;display:inline-flex;align-items:center;gap:8px}
+.nav-tab:hover{background:#eaf2f5;color:var(--navy)}
+.nav-tab.active{background:#e6f3f4;border-color:#c8e5e6;color:var(--teal)}
+.app.categories-mode .top-actions{display:none}
+.categories-view{margin-bottom:23px}
+.category-page-note{display:flex;gap:11px;align-items:flex-start;background:#edf6f7;border:1px solid #d9ebed;color:#45616b;border-radius:13px;padding:14px 16px;margin:0 0 18px;font-size:12px;line-height:1.55}
+.category-page-note p{margin:0}.note-icon{display:grid;place-items:center;flex:0 0 24px;width:24px;height:24px;border-radius:8px;background:#d8ecee;color:var(--teal);font-weight:800}
+.category-management-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.category-admin-title{font-size:15px;margin:10px 0 0;font-weight:780}.category-admin-panel .panel-head{align-items:flex-start}
+.category-count{font-size:10px;font-weight:750;color:var(--muted);background:#f1f5f7;border-radius:8px;padding:7px 9px;white-space:nowrap}
+.managed-category-list{padding:0 18px;display:grid;gap:7px}
+.managed-category-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #edf1f4;border-radius:11px;min-width:0;background:#fff}
+.managed-category-icon{display:grid;place-items:center;width:33px;height:33px;flex:0 0 33px;background:#f0f5f8;border-radius:10px;color:var(--teal);font-size:16px}
+.managed-category-name{font-size:12px;font-weight:700;overflow-wrap:anywhere;flex:1;min-width:0}.managed-category-sub{display:block;font-size:10px;color:#8a98a4;font-weight:500;margin-top:3px}
+.managed-category-actions{display:flex;gap:5px}.managed-category-actions .icon-btn{width:30px;height:30px;font-size:13px}.managed-category-actions .delete-category:hover{background:var(--red-bg);border-color:#f4c5c7;color:var(--red)}
+.category-add-form{padding:17px 20px 20px;margin-top:15px;border-top:1px solid #edf1f4;background:#fbfcfd;border-radius:0 0 18px 18px}
+.category-add-form>label{display:block;font-size:11px;font-weight:750;color:#536674;margin-bottom:8px}
+.category-add-line{display:flex;gap:8px}.category-add-line input{min-width:0;flex:1;width:100%;border:1px solid #dfe7ec;border-radius:10px;background:#fff;padding:10px 12px;outline:0;color:var(--ink)}.category-add-line input:focus{border-color:#65b9be;box-shadow:0 0 0 3px rgba(8,127,140,.09)}
+.category-empty{padding:18px 10px;text-align:center;font-size:12px;color:var(--muted)}
+@media(max-width:700px){.category-management-grid{grid-template-columns:1fr}.app-nav{margin-top:0}.nav-tab{flex:1;justify-content:center;padding:10px 8px;font-size:11px}.category-page-note{padding:12px}}
+
+
+.drive-view{margin-bottom:24px}.drive-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:18px;align-items:start}.drive-panel{padding-bottom:20px}.drive-panel-body{padding:0 22px}.drive-status{display:flex;align-items:flex-start;gap:11px;padding:14px 15px;border-radius:12px;border:1px solid #dce7ec;background:#f7fafc;margin:0 0 18px;line-height:1.5;font-size:12px}.drive-status:before{content:"●";font-size:13px;line-height:1.4;color:#8797a2}.drive-status.good{background:#effaf4;border-color:#caead8;color:#246747}.drive-status.good:before{color:#16845b}.drive-status.warn{background:#fff8e9;border-color:#f0dfb5;color:#815d1f}.drive-status.warn:before{color:#c58b24}.drive-status.error{background:#fff1f1;border-color:#f0d0d1;color:#9e383d}.drive-status.error:before{color:#c24148}.drive-field{margin:0 0 14px}.drive-field label{display:block;font-size:11px;font-weight:750;color:#536674;margin-bottom:7px}.drive-field input[type=text]{width:100%;border:1px solid #dfe7ec;border-radius:10px;background:#fff;padding:11px 12px;outline:0;color:var(--ink);min-height:42px}.drive-field input:focus{border-color:#65b9be;box-shadow:0 0 0 3px rgba(8,127,140,.09)}.drive-check{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#536674;line-height:1.5;margin:14px 0 18px}.drive-check input{margin-top:3px;accent-color:var(--teal)}.drive-actions{display:flex;flex-wrap:wrap;gap:9px}.drive-help{font-size:12px;color:var(--muted);line-height:1.65}.drive-help ol{padding-left:19px;margin:10px 0}.drive-help li{padding:0 0 8px}.drive-help a{color:var(--teal);font-weight:700}.drive-code{font-size:11px;background:#f0f5f8;border:1px solid #e1eaf0;border-radius:7px;padding:2px 5px;color:#294b60;overflow-wrap:anywhere}.drive-foot{font-size:11px;color:#86949e;line-height:1.55;margin:13px 0 0}.drive-last-sync{font-size:11px;color:#657786;margin-top:12px}.drive-steps{display:grid;gap:12px;padding:0 22px}.drive-step{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}.drive-step-number{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:#e7f3f5;color:var(--teal);font-size:11px;font-weight:800}.drive-step strong{font-size:12px;display:block;margin:2px 0 4px}.drive-step p{font-size:11px;color:var(--muted);line-height:1.55;margin:0}.app.drive-mode .top-actions{display:none}
+@media(max-width:700px){.drive-grid{grid-template-columns:1fr}.drive-panel-body{padding:0 16px}.drive-steps{padding:0 16px}.drive-actions .btn{flex:1}.app-nav{flex-wrap:wrap}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brandmark">↗</div><div><h1>Mi Balance</h1><p class="subtitle">Tus ingresos y gastos, bajo control.</p></div></div>
+    <div class="top-actions">
+      <label class="month-wrap">◷ <span>Mes</span> <input id="monthFilter" type="month" aria-label="Seleccionar mes"></label>
+      <button class="btn btn-secondary" id="exportBtn" type="button">↓ Exportar CSV</button>
+      <button class="btn btn-primary" id="toggleFormBtn" type="button">＋ Agregar movimiento</button>
+    </div>
+  </header>
+
+  <nav class="app-nav" aria-label="Secciones de Mi Balance">
+    <button class="nav-tab active" id="homeTab" type="button" role="tab" aria-selected="true" aria-controls="mainView">▦ Resumen y movimientos</button>
+    <button class="nav-tab" id="categoriesTab" type="button" role="tab" aria-selected="false" aria-controls="categoriesView">⚙ Administrar categorías</button>
+    <button class="nav-tab" id="driveTab" type="button" role="tab" aria-selected="false" aria-controls="driveView">☁ Google Drive</button>
+  </nav>
+
+  <div id="mainView" role="tabpanel" aria-labelledby="homeTab">
+  <section class="hero" aria-label="Balance mensual">
+    <div class="hero-copy"><div class="eyebrow" id="heroMonth">RESUMEN DEL MES</div><h2>Balance disponible</h2><div class="hero-amount" id="heroBalance">$0</div><div class="hero-note" id="heroNote">Registra tu primer movimiento para comenzar.</div></div>
+    <div class="hero-total"><div class="small-label">Porcentaje de ahorro</div><div class="big-number" id="savingsRate">—</div><div class="hero-note">Ingresos menos gastos, respecto de tus ingresos</div></div>
+  </section>
+
+  <section class="stats" aria-label="Totales mensuales">
+    <article class="stat"><div class="stat-top"><span>Ingresos del mes</span><span class="stat-icon income-icon">↙</span></div><div class="stat-number" id="incomeTotal">$0</div><div class="stat-foot" id="incomeFoot">Dinero que entra</div></article>
+    <article class="stat"><div class="stat-top"><span>Gastos del mes</span><span class="stat-icon expense-icon">↗</span></div><div class="stat-number" id="expenseTotal">$0</div><div class="stat-foot" id="expenseFoot">Dinero que sale</div></article>
+    <article class="stat"><div class="stat-top"><span>Movimientos</span><span class="stat-icon balance-icon">≋</span></div><div class="stat-number" id="movementCount">0</div><div class="stat-foot" id="movementFoot">En el mes seleccionado</div></article>
+  </section>
+
+
+  <section class="dashboard-section" aria-labelledby="dashboardTitle">
+    <div class="section-heading"><div><p class="section-kicker">Panel de control</p><h2 id="dashboardTitle">Dashboard financiero</h2><p>Observa la evolución de tus finanzas y detecta cambios importantes.</p></div><span class="dashboard-period" id="dashboardPeriod">Mes seleccionado</span></div>
+    <div class="dashboard-grid">
+      <article class="panel">
+        <div class="panel-head dashboard-panel-head"><div><h3>Evolución de los últimos 6 meses</h3><p>Comparación de ingresos y gastos por mes</p></div><div class="trend-legend"><span><i class="legend-dot legend-income"></i>Ingresos</span><span><i class="legend-dot legend-expense"></i>Gastos</span></div></div>
+        <div id="monthlyTrend" class="trend-chart" role="img" aria-label="Gráfico de barras de ingresos y gastos de los últimos seis meses"></div>
+        <div class="trend-footnote" id="trendFootnote">Las barras muestran montos relativos; posa el cursor sobre ellas para ver cifras exactas.</div>
+      </article>
+      <article class="panel">
+        <div class="panel-head dashboard-panel-head"><div><h3>Indicadores del mes</h3><p>Se actualizan al cambiar el período</p></div></div>
+        <div id="dashboardInsights" class="insights-list"><div class="muted-message">Registra movimientos para ver tus indicadores.</div></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel form-panel" id="formPanel" aria-label="Formulario de movimiento">
+    <div class="panel-head"><div><h3 id="formTitle">Nuevo movimiento</h3><p>Completa los datos para registrar una entrada o salida.</p></div><button class="icon-btn" id="closeFormBtn" type="button" aria-label="Cerrar formulario">✕</button></div>
+    <form id="movementForm" class="form-grid">
+      <div class="field"><label>Tipo de movimiento</label><div class="type-toggle"><button class="type-choice active expense-choice" id="expenseTypeBtn" type="button" data-type="gasto">↗ Gasto</button><button class="type-choice income-choice" id="incomeTypeBtn" type="button" data-type="ingreso">↙ Ingreso</button></div><input type="hidden" id="typeInput" value="gasto"></div>
+      <div class="field"><label for="amountInput">Monto (CLP)</label><input id="amountInput" type="number" min="1" step="1" inputmode="numeric" placeholder="Ej. 250000" required></div>
+      <div class="field"><label for="dateInput">Fecha</label><input id="dateInput" type="date" required></div>
+      <div class="field"><label for="categoryInput">Categoría</label><select id="categoryInput" required></select></div>
+      <div class="field field-wide"><label for="descriptionInput">Descripción</label><input id="descriptionInput" type="text" maxlength="90" placeholder="Ej. Sueldo, supermercado, cuenta de luz" required></div>
+      <div class="field"><label for="methodInput">Medio de pago (opcional)</label><select id="methodInput"><option value="">No especificado</option><option>Efectivo</option><option>Débito</option><option>Crédito</option><option>Transferencia</option><option>Otro</option></select></div>
+      <div class="form-actions"><button class="btn btn-secondary" id="cancelFormBtn" type="button">Cancelar</button><button class="btn btn-primary" id="saveBtn" type="submit">Guardar movimiento</button></div>
+    </form>
+  </section>
+
+  <div class="content-grid">
+    <section class="panel">
+      <div class="panel-head"><div><h3>Movimientos</h3><p id="listSubtitle">Registro del mes seleccionado</p></div><input id="searchInput" class="search" type="search" placeholder="Buscar movimiento…" aria-label="Buscar movimiento"></div>
+      <div id="tableContent"></div>
+    </section>
+    <aside class="side-stack">
+      <section class="panel"><div class="panel-head"><div><h3>Distribución de gastos</h3><p>¿En qué se está yendo tu dinero?</p></div></div><div class="breakdown" id="donutSection"></div></section>
+      <section class="panel"><div class="panel-head"><div><h3>Gastos por categoría</h3><p>Comparación dentro del mes</p></div></div><div class="breakdown"><div id="categoryBars" class="category-list"></div></div></section>
+    </aside>
+  </div>
+  </div>
+
+  <section id="categoriesView" class="categories-view hidden" role="tabpanel" aria-labelledby="categoriesTab">
+    <div class="section-heading"><div><p class="section-kicker">Configuración</p><h2 id="categoriesTitle">Administrar categorías</h2><p>Personaliza las categorías que aparecen al registrar ingresos y gastos.</p></div></div>
+    <div class="category-page-note"><span class="note-icon">ⓘ</span><p>Esta sección está separada del resumen principal. Cambiar el nombre de una categoría también actualiza sus movimientos anteriores. Al eliminarla, los movimientos históricos se conservan para no perder tu registro, pero la categoría deja de estar disponible para nuevos movimientos.</p></div>
+    <div class="category-management-grid">
+      <article class="panel category-admin-panel">
+        <div class="panel-head"><div><span class="type-pill type-expense">EGRESOS</span><h3 class="category-admin-title">Categorías de gastos</h3><p>Compras, cuentas y otros gastos.</p></div><span id="expenseCategoryCount" class="category-count">0 categorías</span></div>
+        <div id="expenseCategoryList" class="managed-category-list"></div>
+        <form id="addExpenseCategoryForm" class="category-add-form">
+          <label for="newExpenseCategory">Agregar categoría de gasto</label>
+          <div class="category-add-line"><input id="newExpenseCategory" type="text" maxlength="40" placeholder="Ej. Seguros" required><button class="btn btn-primary btn-small" type="submit">＋ Agregar</button></div>
+        </form>
+      </article>
+      <article class="panel category-admin-panel">
+        <div class="panel-head"><div><span class="type-pill type-income">INGRESOS</span><h3 class="category-admin-title">Categorías de ingresos</h3><p>Sueldo, ventas y otras entradas de dinero.</p></div><span id="incomeCategoryCount" class="category-count">0 categorías</span></div>
+        <div id="incomeCategoryList" class="managed-category-list"></div>
+        <form id="addIncomeCategoryForm" class="category-add-form">
+          <label for="newIncomeCategory">Agregar categoría de ingreso</label>
+          <div class="category-add-line"><input id="newIncomeCategory" type="text" maxlength="40" placeholder="Ej. Pensión" required><button class="btn btn-primary btn-small" type="submit">＋ Agregar</button></div>
+        </form>
+      </article>
+    </div>
+  </section>
+  <section id="driveView" class="drive-view hidden" role="tabpanel" aria-labelledby="driveTab">
+    <div class="section-heading"><div><p class="section-kicker">Respaldo y sincronización</p><h2>Google Drive</h2><p>Guarda los movimientos y categorías en un archivo de tu propio Drive y recupéralos cuando abras la app.</p></div></div>
+    <div class="drive-grid">
+      <article class="panel drive-panel">
+        <div class="panel-head"><div><h3>Conexión y sincronización</h3><p>El archivo de datos se llamará “Mi Balance - datos.json”.</p></div></div>
+        <div class="drive-panel-body">
+          <div id="driveStatus" class="drive-status warn" role="status" aria-live="polite">Configura tu ID de cliente de Google para habilitar la conexión.</div>
+          <div class="drive-field"><label for="driveClientId">ID de cliente OAuth de Google</label><input id="driveClientId" type="text" autocomplete="off" spellcheck="false" placeholder="123456789-abc.apps.googleusercontent.com"></div>
+          <label class="drive-check"><input id="driveAutoSync" type="checkbox" checked><span><strong>Intentar sincronizar al abrir la app.</strong><br>Si Google no permite la autorización silenciosa, se mostrará un aviso para conectar manualmente.</span></label>
+          <div class="drive-actions"><button id="saveDriveConfigBtn" class="btn btn-secondary" type="button">Guardar configuración</button><button id="connectDriveBtn" class="btn btn-primary" type="button">Conectar y sincronizar</button><button id="syncDriveBtn" class="btn btn-secondary" type="button">Sincronizar ahora</button><button id="disconnectDriveBtn" class="btn btn-secondary" type="button">Desconectar sesión</button></div>
+          <div class="drive-actions" style="margin-top:10px"><button id="exportBackupBtn" class="btn btn-secondary" type="button">↓ Descargar respaldo completo</button><button id="importBackupBtn" class="btn btn-secondary" type="button">↑ Importar respaldo JSON</button><input id="importBackupInput" class="hidden" type="file" accept="application/json,.json"></div>
+          <p class="drive-foot">El respaldo JSON incluye todos los movimientos y las categorías personalizadas. Úsalo para trasladar los datos al navegador nuevo antes de activar Drive.</p>
+          <div id="driveLastSync" class="drive-last-sync">Todavía no se ha sincronizado con Drive.</div>
+          <p class="drive-foot">La app no almacena la contraseña de Google ni guarda el token de acceso permanente. Cuando Google no permite renovar el acceso en segundo plano, tendrás que pulsar “Conectar y sincronizar”.</p>
+        </div>
+      </article>
+      <article class="panel drive-panel">
+        <div class="panel-head"><div><h3>Configuración inicial</h3><p>Se realiza una sola vez en tu cuenta de Google.</p></div></div>
+        <div class="drive-steps">
+          <div class="drive-step"><span class="drive-step-number">1</span><div><strong>Prepara la app para ejecutarse como sitio web</strong><p>No basta con abrir el archivo directamente (<span class="drive-code">file://</span>). En Windows puedes poner el HTML en una carpeta, abrir PowerShell en esa carpeta, ejecutar <span class="drive-code">py -m http.server 8000</span> y visitar <span class="drive-code">http://localhost:8000/mi_balance.html</span>.</p></div></div>
+          <div class="drive-step"><span class="drive-step-number">2</span><div><strong>Crea un ID de cliente OAuth</strong><p>En <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">Google Cloud Console → Credenciales</a>, crea un cliente OAuth de tipo “Aplicación web”. En “Orígenes autorizados de JavaScript”, agrega <span class="drive-code">http://localhost:8000</span> (o el dominio HTTPS en que alojes la app).</p></div></div>
+          <div class="drive-step"><span class="drive-step-number">3</span><div><strong>Habilita Google Drive API</strong><p>En el mismo proyecto habilita “Google Drive API”, configura la pantalla de consentimiento OAuth y copia el ID de cliente en el campo de esta pantalla. No ingreses un secreto de cliente.</p></div></div>
+          <div class="drive-step"><span class="drive-step-number">4</span><div><strong>Conecta, y elige qué datos conservar</strong><p>La primera vez, si ya existe un archivo de datos en Drive y también hay datos locales, la app te preguntará si prefieres descargar los de Drive o reemplazar el archivo de Drive con los de este computador.</p></div></div>
+        </div>
+        <div class="panel-head"><p>Guía oficial de Google: <a href="https://developers.google.com/workspace/drive/api/quickstart/js?hl=es-419" target="_blank" rel="noopener noreferrer">Configurar Drive API para JavaScript</a>.</p></div>
+      </article>
+    </div>
+  </section>
+  <footer class="footer-note"><span class="privacy" id="privacyNote">▣ Tus datos quedan guardados en este navegador.</span><span>Mi Balance · Control personal</span></footer>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  'use strict';
+  const STORAGE_KEY = 'miBalance.transactions.v1';
+  const CATEGORY_STORAGE_KEY = 'miBalance.categories.v1';
+  const DRIVE_CLIENT_STORAGE_KEY = 'miBalance.drive.clientId.v1';
+  const DRIVE_FILE_ID_STORAGE_KEY = 'miBalance.drive.fileId.v1';
+  const DRIVE_LAST_SNAPSHOT_STORAGE_KEY = 'miBalance.drive.lastSnapshot.v1';
+  const DRIVE_AUTOSYNC_STORAGE_KEY = 'miBalance.drive.autoSync.v1';
+  const DRIVE_FILENAME = 'Mi Balance - datos.json';
+  const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+  const DRIVE_API = 'https://www.googleapis.com/drive/v3/files';
+  const DEFAULT_EXPENSE_CATEGORIES = ['Vivienda','Alimentación','Transporte','Cuentas y servicios','Salud','Educación','Deudas','Hogar','Ocio','Mascotas','Otros gastos'];
+  const DEFAULT_INCOME_CATEGORIES = ['Sueldo','Trabajo independiente','Ventas','Arriendos','Inversiones','Bonos y beneficios','Otros ingresos'];
+  const CATEGORY_ICONS = {'Vivienda':'⌂','Alimentación':'◒','Transporte':'⌁','Cuentas y servicios':'ϟ','Salud':'✚','Educación':'▤','Deudas':'↘','Hogar':'⌂','Ocio':'♬','Mascotas':'♧','Otros gastos':'⋯','Sueldo':'▣','Trabajo independiente':'✎','Ventas':'◇','Arriendos':'⌂','Inversiones':'↗','Bonos y beneficios':'✦','Otros ingresos':'＋'};
+  const categoryTypeNames = {gasto:'gastos', ingreso:'ingresos'};
+  function cleanCategoryList(value, fallback){
+    if(!Array.isArray(value)) return [...fallback];
+    const seen=new Set();
+    const cleaned=value.map(v=>String(v||'').trim().slice(0,40)).filter(v=>{const key=v.toLocaleLowerCase('es-CL');if(!v||seen.has(key))return false;seen.add(key);return true;});
+    return cleaned.length?cleaned:[...fallback];
+  }
+  let categorySets={gasto:[...DEFAULT_EXPENSE_CATEGORIES],ingreso:[...DEFAULT_INCOME_CATEGORIES]};
+  try{
+    const savedCategories=JSON.parse(localStorage.getItem(CATEGORY_STORAGE_KEY)||'null');
+    if(savedCategories && typeof savedCategories==='object'){
+      categorySets.gasto=cleanCategoryList(savedCategories.gasto,DEFAULT_EXPENSE_CATEGORIES);
+      categorySets.ingreso=cleanCategoryList(savedCategories.ingreso,DEFAULT_INCOME_CATEGORIES);
+    }
+  }catch(err){}
+  const PALETTE = ['#087f8c','#4e83c4','#e6a23c','#8c76bf','#37a57b','#d76d7a','#7f9a54','#c48c66','#5d9ca8','#b1a14b','#8b98a5'];
+  const $ = id => document.getElementById(id);
+  const money = n => new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(Math.round(Number(n)||0));
+  const today = new Date();
+  const localISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const currentMonth = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`;
+  const monthLabel = value => { if(!value) return 'Mes seleccionado'; const [y,m]=value.split('-').map(Number); return new Intl.DateTimeFormat('es-CL',{month:'long',year:'numeric'}).format(new Date(y,m-1,1)); };
+  const dateLabel = value => { if(!value) return '—'; const [y,m,d]=value.split('-').map(Number); return new Intl.DateTimeFormat('es-CL',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(y,m-1,d)); };
+  const escapeHTML = value => String(value??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let transactions = [];
+  let editingId = null;
+  let toastTimer = null;
+  let driveTokenClient = null;
+  let driveAccessToken = null;
+  let driveFileId = localStorage.getItem(DRIVE_FILE_ID_STORAGE_KEY) || '';
+  let driveTokenClientId = '';
+  let driveAuthPurpose = 'manual';
+  let driveSaveTimer = null;
+  let driveBusy = false;
+  let applyingDriveState = false;
+  let lastDriveSync = '';
+  try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); if(Array.isArray(saved)) transactions = saved.filter(t=>t && typeof t.id==='string' && ['ingreso','gasto'].includes(t.type) && Number.isFinite(Number(t.amount))); } catch(err) { transactions=[]; }
+  $('monthFilter').value = currentMonth;
+  $('dateInput').value = localISO(today);
+
+  function notify(message){ const el=$('toast'); el.textContent=message; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2600); }
+  function persist(){ try { localStorage.setItem(STORAGE_KEY,JSON.stringify(transactions)); if(!applyingDriveState) scheduleDriveSave(); return true; } catch(err) { notify('No se pudo guardar: el almacenamiento del navegador está lleno o bloqueado.'); return false; } }
+  function persistCategories(){ try { localStorage.setItem(CATEGORY_STORAGE_KEY,JSON.stringify(categorySets)); if(!applyingDriveState) scheduleDriveSave(); return true; } catch(err) { notify('No se pudieron guardar las categorías en este navegador.'); return false; } }
+  function amountOf(t){ return Math.max(0,Number(t.amount)||0); }
+  function selectedTransactions(){ const m=$('monthFilter').value; return transactions.filter(t=>String(t.date||'').slice(0,7)===m); }
+  function filteredTransactions(){ const query=$('searchInput').value.trim().toLocaleLowerCase('es-CL'); return selectedTransactions().filter(t=>!query || [t.description,t.category,t.method,t.type].some(v=>String(v||'').toLocaleLowerCase('es-CL').includes(query))).sort((a,b)=>String(b.date).localeCompare(String(a.date)) || Number(b.createdAt||0)-Number(a.createdAt||0)); }
+  function totals(list){ return list.reduce((acc,t)=>{ if(t.type==='ingreso') acc.income+=amountOf(t); else acc.expense+=amountOf(t); return acc; },{income:0,expense:0}); }
+  function updateCategoryOptions(type, selected){
+    const select=$('categoryInput');
+    const list=[...(categorySets[type]||[])];
+    const keepHistorical=selected && !list.includes(selected) && transactions.some(t=>t.type===type && t.category===selected);
+    if(keepHistorical) list.push(selected);
+    select.innerHTML=list.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}${!categorySets[type].includes(c)?' (histórica)':''}</option>`).join('');
+    if(selected && list.includes(selected)) select.value=selected;
+  }
+  function chooseType(type){ $('typeInput').value=type; $('expenseTypeBtn').classList.toggle('active',type==='gasto'); $('incomeTypeBtn').classList.toggle('active',type==='ingreso'); updateCategoryOptions(type); }
+  function showForm(){ $('formPanel').classList.add('open'); $('toggleFormBtn').classList.add('hidden'); }
+  function hideForm(){ $('formPanel').classList.remove('open'); $('toggleFormBtn').classList.remove('hidden'); resetForm(); }
+  function defaultDateForSelectedMonth(){ const m=$('monthFilter').value||currentMonth; const [y,mo]=m.split('-').map(Number); const day=Math.min(today.getDate(),new Date(y,mo,0).getDate()); return `${m}-${String(day).padStart(2,'0')}`; }
+  function resetForm(){ editingId=null; $('movementForm').reset(); $('typeInput').value='gasto'; $('dateInput').value=defaultDateForSelectedMonth(); $('formTitle').textContent='Nuevo movimiento'; $('saveBtn').textContent='Guardar movimiento'; $('cancelFormBtn').textContent='Cancelar'; chooseType('gasto'); }
+  function beginEdit(id){ const t=transactions.find(x=>x.id===id); if(!t)return; editingId=id; $('typeInput').value=t.type; chooseType(t.type); $('amountInput').value=amountOf(t); $('dateInput').value=t.date; updateCategoryOptions(t.type,t.category); $('descriptionInput').value=t.description||''; $('methodInput').value=t.method||''; $('formTitle').textContent='Editar movimiento'; $('saveBtn').textContent='Guardar cambios'; showForm(); $('formPanel').scrollIntoView({behavior:'smooth',block:'start'}); }
+  function deleteMovement(id){ const t=transactions.find(x=>x.id===id); if(!t)return; if(!window.confirm(`¿Eliminar el movimiento “${t.description}” por ${money(t.amount)}?`))return; transactions=transactions.filter(x=>x.id!==id); persist(); render(); notify('Movimiento eliminado.'); }
+
+  function shortMoney(value){
+    const n=Number(value)||0; const abs=Math.abs(n); const sign=n<0?'−':'';
+    if(abs>=1000000) return `${sign}$${(abs/1000000).toLocaleString('es-CL',{maximumFractionDigits:1})} M`;
+    if(abs>=1000) return `${sign}$${(abs/1000).toLocaleString('es-CL',{maximumFractionDigits:0})} mil`;
+    return money(n);
+  }
+  function previousMonthKey(month){ const [y,m]=month.split('-').map(Number); const d=new Date(y,m-2,1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+  function renderDashboard(month, monthTx, sum, balance){
+    $('dashboardPeriod').textContent=monthLabel(month);
+    const [year,monthNumber]=month.split('-').map(Number);
+    const sixMonths=[];
+    for(let i=5;i>=0;i--){
+      const d=new Date(year,monthNumber-1-i,1);
+      const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      const monthList=transactions.filter(t=>String(t.date||'').slice(0,7)===key);
+      const monthTotals=totals(monthList);
+      sixMonths.push({key,date:d,income:monthTotals.income,expense:monthTotals.expense,balance:monthTotals.income-monthTotals.expense});
+    }
+    const maxAmount=Math.max(1,...sixMonths.flatMap(m=>[m.income,m.expense]));
+    const monthName=d=>new Intl.DateTimeFormat('es-CL',{month:'short'}).format(d).replace('.','');
+    $('monthlyTrend').innerHTML=sixMonths.map(m=>{
+      const incomeHeight=m.income?Math.max(3,m.income/maxAmount*100):0;
+      const expenseHeight=m.expense?Math.max(3,m.expense/maxAmount*100):0;
+      const title=`${monthLabel(m.key)} — Ingresos: ${money(m.income)}; gastos: ${money(m.expense)}; saldo: ${money(m.balance)}`;
+      return `<div class="trend-month" title="${escapeHTML(title)}"><div class="trend-bars"><span class="trend-bar income-bar" style="height:${incomeHeight}%" title="Ingresos: ${escapeHTML(money(m.income))}" aria-label="Ingresos ${escapeHTML(money(m.income))}"></span><span class="trend-bar expense-bar" style="height:${expenseHeight}%" title="Gastos: ${escapeHTML(money(m.expense))}" aria-label="Gastos ${escapeHTML(money(m.expense))}"></span></div><div class="trend-month-label">${escapeHTML(monthName(m.date))}</div><div class="trend-balance" title="Saldo: ${escapeHTML(money(m.balance))}">${escapeHTML(shortMoney(m.balance))}</div></div>`;
+    }).join('');
+    const periodHasData=sixMonths.some(m=>m.income||m.expense);
+    $('trendFootnote').textContent=periodHasData?'Barras verdes: ingresos · barras amarillas: gastos · cifra inferior: saldo mensual. Pasa el cursor sobre las barras para ver montos exactos.':'Cuando registres ingresos o gastos, aquí verás la evolución de los últimos seis meses.';
+
+    const root=$('dashboardInsights');
+    const expenses=monthTx.filter(t=>t.type==='gasto');
+    const byCategory={}; expenses.forEach(t=>byCategory[t.category]=(byCategory[t.category]||0)+amountOf(t));
+    const topCategory=Object.entries(byCategory).sort((a,b)=>b[1]-a[1])[0];
+    const prevKey=previousMonthKey(month);
+    const prevSum=totals(transactions.filter(t=>String(t.date||'').slice(0,7)===prevKey));
+    const prevExpense=prevSum.expense;
+    let comparisonValue='Sin comparación'; let comparisonDetail='Aún no hay datos del mes anterior.'; let comparisonClass='insight-neutral';
+    if(prevExpense>0){
+      const delta=sum.expense-prevExpense; const pct=Math.round(delta/prevExpense*100);
+      if(delta>0){comparisonValue=`Subieron ${Math.abs(pct)}%`;comparisonDetail=`${money(delta)} más que en ${monthLabel(prevKey)}.`;comparisonClass='insight-negative';}
+      else if(delta<0){comparisonValue=`Bajaron ${Math.abs(pct)}%`;comparisonDetail=`${money(Math.abs(delta))} menos que en ${monthLabel(prevKey)}.`;comparisonClass='insight-positive';}
+      else{comparisonValue='Sin variación';comparisonDetail='Gastaste lo mismo que el mes anterior.';comparisonClass='insight-neutral';}
+    }else if(sum.expense>0){comparisonValue='No hay base previa';comparisonDetail=`Registraste ${money(sum.expense)} en gastos este mes.`;comparisonClass='insight-neutral';}
+    else if(prevExpense===0){comparisonValue='Sin gastos';comparisonDetail='No hay gastos registrados este mes ni el anterior.';comparisonClass='insight-positive';}
+    const daysInMonth=new Date(year,monthNumber,0).getDate();
+    const spendRatio=sum.income>0?Math.round(sum.expense/sum.income*100):null;
+    const insights=[];
+    if(topCategory){
+      const categoryShare=sum.expense>0?Math.round(topCategory[1]/sum.expense*100):0;
+      insights.push({icon:'◆',label:'Categoría con mayor gasto',value:`${topCategory[0]} · ${money(topCategory[1])}`,detail:`Representa el ${categoryShare}% de tus gastos del mes.`,className:'insight-neutral'});
+    }else{
+      insights.push({icon:'◆',label:'Categoría con mayor gasto',value:'Sin gastos registrados',detail:'Al agregar gastos aparecerá aquí la categoría principal.',className:'insight-neutral'});
+    }
+    insights.push({icon:'↕',label:'Gastos frente al mes anterior',value:comparisonValue,detail:comparisonDetail,className:comparisonClass});
+    insights.push({icon:'◷',label:'Promedio diario de gastos',value:money(sum.expense/daysInMonth),detail:`Gasto mensual dividido entre los ${daysInMonth} días del mes.`,className:'insight-neutral'});
+    if(spendRatio===null){insights.push({icon:'%',label:'Ingresos utilizados',value:'No calculable aún',detail:'Registra ingresos para medir qué parte se destina a gastos.',className:'insight-neutral'});}
+    else {const ratioClass=spendRatio>100?'insight-negative':spendRatio<=75?'insight-positive':'insight-neutral';insights.push({icon:'%',label:'Ingresos utilizados',value:`${spendRatio}%`,detail:spendRatio>100?'Tus gastos superan los ingresos de este mes.':`${Math.max(0,100-spendRatio)}% de tus ingresos queda después de los gastos.`,className:ratioClass});}
+    root.innerHTML=insights.map(i=>`<div class="insight-row"><div class="insight-icon" aria-hidden="true">${escapeHTML(i.icon)}</div><div><div class="insight-label">${escapeHTML(i.label)}</div><div class="insight-value ${i.className}">${escapeHTML(i.value)}</div><div class="insight-detail">${escapeHTML(i.detail)}</div></div></div>`).join('');
+  }
+
+  function showView(view){
+    const showCategories=view==='categories';
+    const showDrive=view==='drive';
+    const showHome=!showCategories&&!showDrive;
+    $('mainView').classList.toggle('hidden',!showHome);
+    $('categoriesView').classList.toggle('hidden',!showCategories);
+    $('driveView').classList.toggle('hidden',!showDrive);
+    $('homeTab').classList.toggle('active',showHome);
+    $('categoriesTab').classList.toggle('active',showCategories);
+    $('driveTab').classList.toggle('active',showDrive);
+    $('homeTab').setAttribute('aria-selected',String(showHome));
+    $('categoriesTab').setAttribute('aria-selected',String(showCategories));
+    $('driveTab').setAttribute('aria-selected',String(showDrive));
+    document.querySelector('.app').classList.toggle('section-mode',showCategories||showDrive);
+    document.querySelector('.app').classList.toggle('categories-mode',showCategories);
+    document.querySelector('.app').classList.toggle('drive-mode',showDrive);
+    if(showCategories) renderCategoryManagement();
+    if(showDrive) refreshDrivePanel();
+  }
+  function renderCategoryManagement(){
+    const configs=[
+      {type:'gasto',listId:'expenseCategoryList',countId:'expenseCategoryCount'},
+      {type:'ingreso',listId:'incomeCategoryList',countId:'incomeCategoryCount'}
+    ];
+    configs.forEach(config=>{
+      const list=categorySets[config.type];
+      $(config.countId).textContent=`${list.length} ${list.length===1?'categoría':'categorías'}`;
+      const root=$(config.listId);
+      if(!list.length){root.innerHTML='<div class="category-empty">No hay categorías.</div>';return;}
+      root.innerHTML=list.map(name=>`<div class="managed-category-row"><span class="managed-category-icon" aria-hidden="true">${escapeHTML(CATEGORY_ICONS[name]||'•')}</span><div class="managed-category-name">${escapeHTML(name)}<span class="managed-category-sub">Disponible al registrar ${categoryTypeNames[config.type]}</span></div><div class="managed-category-actions"><button type="button" class="icon-btn" title="Cambiar nombre" aria-label="Cambiar nombre de ${escapeHTML(name)}" data-rename-category="${config.type}" data-category-name="${escapeHTML(name)}">✎</button><button type="button" class="icon-btn delete-category" title="Eliminar categoría" aria-label="Eliminar categoría ${escapeHTML(name)}" data-delete-category="${config.type}" data-category-name="${escapeHTML(name)}">×</button></div></div>`).join('');
+      root.querySelectorAll('[data-rename-category]').forEach(button=>button.addEventListener('click',()=>renameCategory(button.dataset.renameCategory,button.dataset.categoryName)));
+      root.querySelectorAll('[data-delete-category]').forEach(button=>button.addEventListener('click',()=>deleteCategory(button.dataset.deleteCategory,button.dataset.categoryName)));
+    });
+  }
+  function addCategory(type,inputId){
+    const input=$(inputId); const name=input.value.trim();
+    if(!name){notify('Escribe el nombre de la categoría.');input.focus();return;}
+    if(name.length>40){notify('Usa un nombre de hasta 40 caracteres.');input.focus();return;}
+    if(categorySets[type].some(c=>c.toLocaleLowerCase('es-CL')===name.toLocaleLowerCase('es-CL'))){notify('Ya existe una categoría con ese nombre.');input.focus();return;}
+    categorySets[type].push(name);
+    if(!persistCategories()){categorySets[type].pop();return;}
+    input.value='';renderCategoryManagement();
+    const currentType=$('typeInput').value; const currentCategory=$('categoryInput').value;
+    updateCategoryOptions(currentType,currentCategory);
+    notify('Categoría agregada.');
+  }
+  function renameCategory(type,oldName){
+    const proposed=window.prompt('Nuevo nombre para la categoría:',oldName);
+    if(proposed===null)return;
+    const newName=proposed.trim();
+    if(!newName){notify('El nombre no puede quedar vacío.');return;}
+    if(newName.length>40){notify('Usa un nombre de hasta 40 caracteres.');return;}
+    if(newName===oldName)return;
+    if(categorySets[type].some(c=>c.toLocaleLowerCase('es-CL')===newName.toLocaleLowerCase('es-CL'))){notify('Ya existe una categoría con ese nombre.');return;}
+    const index=categorySets[type].indexOf(oldName);if(index<0)return;
+    categorySets[type][index]=newName;
+    const before=transactions;
+    transactions=transactions.map(t=>t.type===type && t.category===oldName?{...t,category:newName}:t);
+    if(!persistCategories()) {categorySets[type][index]=oldName;transactions=before;return;}
+    persist();
+    renderCategoryManagement();
+    const currentType=$('typeInput').value;const currentCategory=$('categoryInput').value;
+    updateCategoryOptions(currentType,currentCategory===oldName?newName:currentCategory);
+    render();
+    notify('Categoría renombrada.');
+  }
+  function deleteCategory(type,name){
+    if(categorySets[type].length<=1){notify('Debe quedar al menos una categoría para este tipo de movimiento.');return;}
+    const hasMovements=transactions.some(t=>t.type===type && t.category===name);
+    const historicalText=hasMovements?' Los movimientos anteriores se conservarán con esta categoría.':'';
+    if(!window.confirm(`¿Eliminar la categoría “${name}”? Dejará de aparecer para nuevos movimientos.${historicalText}`))return;
+    const previous=[...categorySets[type]];
+    categorySets[type]=categorySets[type].filter(c=>c!==name);
+    if(!persistCategories()){categorySets[type]=previous;return;}
+    renderCategoryManagement();
+    const currentType=$('typeInput').value;const currentCategory=$('categoryInput').value;
+    updateCategoryOptions(currentType,currentType===type && currentCategory===name?undefined:currentCategory);
+    render();
+    notify('Categoría eliminada de las opciones.');
+  }
+
+  function render(){
+    const month=$('monthFilter').value||currentMonth; const monthTx=selectedTransactions(); const sum=totals(monthTx); const balance=sum.income-sum.expense;
+    $('heroMonth').textContent=monthLabel(month).toLocaleUpperCase('es-CL'); $('heroBalance').textContent=money(balance); $('heroBalance').className='hero-amount '+(balance<0?'negative':'positive');
+    $('heroNote').textContent=monthTx.length? (balance>=0?'Vas con un saldo positivo este mes.':'Tus gastos superan tus ingresos este mes.'):'Registra tu primer movimiento para comenzar.';
+    $('savingsRate').textContent=sum.income>0?`${Math.round((balance/sum.income)*100)}%`:'—'; $('savingsRate').className='big-number '+(balance<0?'negative':'positive');
+    $('incomeTotal').textContent=money(sum.income); $('expenseTotal').textContent=money(sum.expense); $('movementCount').textContent=String(monthTx.length); $('incomeFoot').textContent=`${monthTx.filter(t=>t.type==='ingreso').length} ingreso(s) registrado(s)`; $('expenseFoot').textContent=`${monthTx.filter(t=>t.type==='gasto').length} gasto(s) registrado(s)`; $('movementFoot').textContent=monthTx.length===1?'1 movimiento en el mes':`${monthTx.length} movimientos en el mes`;
+    $('listSubtitle').textContent=`${monthLabel(month)} · ${monthTx.length} movimiento(s)`;
+    renderDashboard(month,monthTx,sum,balance);
+    renderTable(filteredTransactions()); renderDonut(monthTx,sum.expense); renderBars(monthTx,sum.expense);
+  }
+  function renderTable(list){
+    const root=$('tableContent');
+    if(!list.length){ const hasMonth=selectedTransactions().length>0; root.innerHTML=`<div class="empty"><div class="empty-symbol">${hasMonth?'⌕':'＋'}</div><b>${hasMonth?'No hay coincidencias':'Todavía no hay movimientos'}</b><p>${hasMonth?'Prueba con otra palabra de búsqueda.':'Agrega un ingreso o un gasto para empezar a ver tu balance mensual.'}</p>${hasMonth?'':'<button class="btn btn-primary btn-small" type="button" id="emptyAddBtn">＋ Registrar movimiento</button>'}</div>`; const b=$('emptyAddBtn'); if(b)b.addEventListener('click',()=>{resetForm();showForm();$('amountInput').focus();}); return; }
+    root.innerHTML=`<div class="table-wrap"><table class="table"><thead><tr><th>Movimiento</th><th>Fecha</th><th>Tipo</th><th style="text-align:right">Monto</th><th>Acciones</th></tr></thead><tbody>${list.map(t=>{const income=t.type==='ingreso';const icon=CATEGORY_ICONS[t.category]||'•';return `<tr><td><div class="detail"><div class="cat-icon">${escapeHTML(icon)}</div><div style="min-width:0"><div class="detail-main" title="${escapeHTML(t.description)}">${escapeHTML(t.description)}</div><div class="detail-sub">${escapeHTML(t.category)}${t.method?' · '+escapeHTML(t.method):''}</div></div></div></td><td>${escapeHTML(dateLabel(t.date))}</td><td><span class="type-pill ${income?'type-income':'type-expense'}">${income?'Ingreso':'Gasto'}</span></td><td class="amount ${income?'amount-income':'amount-expense'}">${income?'+':'−'}${money(t.amount)}</td><td><div class="actions"><button class="icon-btn" title="Editar" aria-label="Editar ${escapeHTML(t.description)}" data-edit="${escapeHTML(t.id)}">✎</button><button class="icon-btn" title="Eliminar" aria-label="Eliminar ${escapeHTML(t.description)}" data-delete="${escapeHTML(t.id)}">×</button></div></td></tr>`;}).join('')}</tbody></table></div>`;
+    root.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>beginEdit(b.dataset.edit))); root.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteMovement(b.dataset.delete)));
+  }
+  function renderDonut(list, expenseTotal){
+    const root=$('donutSection'); const expenses=list.filter(t=>t.type==='gasto');
+    if(!expenses.length || expenseTotal<=0){root.innerHTML='<div class="muted-message">Cuando registres gastos, aquí verás qué categorías concentran tus salidas de dinero.</div>';return;}
+    const sums={}; expenses.forEach(t=>sums[t.category]=(sums[t.category]||0)+amountOf(t)); const entries=Object.entries(sums).sort((a,b)=>b[1]-a[1]); const top=entries.slice(0,3); let start=0; const stops=entries.map(([name,value],i)=>{const pct=value/expenseTotal*100;const part=`${PALETTE[i%PALETTE.length]} ${start}% ${start+pct}%`;start+=pct;return part;}); const gradient=`conic-gradient(${stops.join(',')})`;
+    root.innerHTML=`<div class="donut-row"><div class="donut" style="background:${gradient}"><div class="donut-inner"><div class="donut-total">${money(expenseTotal)}</div><div class="donut-caption">GASTOS</div></div></div><div class="legend">${top.map(([name,value],i)=>`<div class="legend-item"><span class="legend-name"><span style="color:${PALETTE[i%PALETTE.length]}">●</span> ${escapeHTML(name)}</span><span class="legend-value">${Math.round(value/expenseTotal*100)}%</span></div>`).join('')}${entries.length>3?`<div class="legend-item"><span class="legend-name">Otras categorías</span><span class="legend-value">${Math.round(entries.slice(3).reduce((s,e)=>s+e[1],0)/expenseTotal*100)}%</span></div>`:''}</div></div><div class="muted-message">${entries.length?`Categoría principal: <b>${escapeHTML(entries[0][0])}</b> (${Math.round(entries[0][1]/expenseTotal*100)}% de los gastos).`:''}</div>`;
+  }
+  function renderBars(list, expenseTotal){
+    const root=$('categoryBars'); const sums={}; list.filter(t=>t.type==='gasto').forEach(t=>sums[t.category]=(sums[t.category]||0)+amountOf(t)); const entries=Object.entries(sums).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    if(!entries.length){root.innerHTML='<div class="muted-message">Aún no hay gastos para comparar.</div>';return;}
+    const max=entries[0][1]||1; root.innerHTML=entries.map(([name,value],i)=>`<div><div class="category-line-head"><div class="category-label"><span style="color:${PALETTE[i%PALETTE.length]}">●</span><span>${escapeHTML(name)}</span></div><div class="category-value">${money(value)}</div></div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2,value/max*100)}%;background:${PALETTE[i%PALETTE.length]}"></div></div></div>`).join('');
+  }
+  function setDriveStatus(message,kind='warn'){
+    const el=$('driveStatus'); if(!el)return;
+    el.className='drive-status '+kind; el.textContent=message;
+  }
+  function refreshDrivePanel(){
+    if(!$('driveClientId'))return;
+    if(!$('driveClientId').value) $('driveClientId').value=localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)||'';
+    $('driveAutoSync').checked=localStorage.getItem(DRIVE_AUTOSYNC_STORAGE_KEY)!=='false';
+    $('driveLastSync').textContent=lastDriveSync?`Última sincronización: ${lastDriveSync}`:'Todavía no se ha sincronizado con Drive.';
+    if(location.protocol==='file:') setDriveStatus('La app está abierta como archivo local. Para conectar Drive, sírvela desde http://localhost:8000 o desde un sitio HTTPS y registra ese origen en Google Cloud.','warn');
+    else if(driveAccessToken&&driveFileId) setDriveStatus('Conectado a Google Drive. Los cambios se sincronizan automáticamente mientras el acceso siga autorizado.','good');
+    else if(localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)) setDriveStatus('ID de cliente guardado. Conecta tu cuenta para leer y actualizar el archivo de Drive.','warn');
+    else setDriveStatus('Configura tu ID de cliente de Google para habilitar la conexión.','warn');
+  }
+  function driveOriginIsSupported(){
+    if(location.protocol==='https:')return true;
+    if(location.protocol==='http:'&&['localhost','127.0.0.1'].includes(location.hostname))return true;
+    setDriveStatus('Google OAuth no funcionará desde file:// ni desde un origen web no seguro. Usa localhost o un dominio HTTPS autorizado.','error');
+    return false;
+  }
+  function saveDriveConfiguration(showMessage=true){
+    const id=$('driveClientId').value.trim();
+    if(id && !id.includes('.apps.googleusercontent.com')){
+      setDriveStatus('El ID no parece un ID de cliente OAuth web de Google. Copia el valor terminado en .apps.googleusercontent.com.','error');
+      if(showMessage)notify('Revisa el ID de cliente de Google.');
+      return false;
+    }
+    if(id)localStorage.setItem(DRIVE_CLIENT_STORAGE_KEY,id); else localStorage.removeItem(DRIVE_CLIENT_STORAGE_KEY);
+    localStorage.setItem(DRIVE_AUTOSYNC_STORAGE_KEY,$('driveAutoSync').checked?'true':'false');
+    if(driveTokenClientId!==id){driveTokenClient=null;driveTokenClientId='';driveAccessToken=null;}
+    if(showMessage)notify('Configuración de Google Drive guardada.');
+    refreshDrivePanel();
+    return true;
+  }
+  function loadGoogleIdentity(){
+    if(window.google&&window.google.accounts&&window.google.accounts.oauth2)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      let script=document.getElementById('googleIdentityScript');
+      if(script){script.addEventListener('load',()=>resolve(),{once:true});script.addEventListener('error',()=>reject(new Error('No se pudo cargar la biblioteca de Google. Revisa tu conexión a internet.')),{once:true});return;}
+      script=document.createElement('script');script.id='googleIdentityScript';script.src='https://accounts.google.com/gsi/client';script.async=true;script.defer=true;
+      script.onload=()=>resolve();script.onerror=()=>reject(new Error('No se pudo cargar la biblioteca de Google. Revisa tu conexión a internet.'));document.head.appendChild(script);
+    });
+  }
+  async function initializeDriveTokenClient(){
+    const clientId=$('driveClientId').value.trim()||localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)||'';
+    if(!clientId)throw new Error('Primero agrega y guarda el ID de cliente OAuth de Google.');
+    if(driveTokenClient&&driveTokenClientId===clientId)return;
+    await loadGoogleIdentity();
+    driveTokenClientId=clientId;
+    driveTokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:clientId,
+      scope:DRIVE_SCOPE,
+      callback:async response=>{
+        if(!response||response.error||!response.access_token){
+          driveAccessToken=null;
+          const reason=response&&response.error==='access_denied'?'Google no concedió acceso. Puedes intentarlo de nuevo.':'No se pudo autorizar Drive automáticamente. Pulsa “Conectar y sincronizar”.';
+          setDriveStatus(reason,'warn');
+          if(driveAuthPurpose!=='auto')notify(reason);
+          return;
+        }
+        driveAccessToken=response.access_token;
+        try{await processDriveSync(driveAuthPurpose);}
+        catch(err){
+          driveAccessToken=null;
+          setDriveStatus(`Error de sincronización: ${err.message}`,'error');
+          notify('No se pudo sincronizar con Drive. Tus datos locales siguen disponibles.');
+        }
+      },
+      error_callback:error=>{
+        if(error&&error.type==='popup_failed_to_open')setDriveStatus('El navegador bloqueó la ventana de autorización. Permite las ventanas emergentes y vuelve a pulsar “Conectar y sincronizar”.','warn');
+        else setDriveStatus('No se completó la autorización de Google. Pulsa “Conectar y sincronizar” para volver a intentarlo.','warn');
+      }
+    });
+  }
+  async function requestDriveAccess(purpose='manual',silent=false){
+    if(!saveDriveConfiguration(false))return;
+    if(!driveOriginIsSupported())return;
+    try{
+      await initializeDriveTokenClient();
+      driveAuthPurpose=purpose;
+      setDriveStatus(silent?'Intentando comprobar si Google permite renovar el acceso automáticamente…':'Esperando autorización de Google…','warn');
+      driveTokenClient.requestAccessToken(silent?{prompt:'none'}:{});
+    }catch(err){setDriveStatus(err.message,'error');if(!silent)notify(err.message);}
+  }
+  async function driveFetch(url,options={}){
+    if(!driveAccessToken)throw new Error('No hay autorización activa. Conecta de nuevo tu cuenta de Google.');
+    const headers=new Headers(options.headers||{});headers.set('Authorization',`Bearer ${driveAccessToken}`);
+    const response=await fetch(url,{...options,headers});
+    if(!response.ok){
+      let detail='';try{detail=(await response.text()).slice(0,240);}catch(err){}
+      if(response.status===401)driveAccessToken=null;
+      if(response.status===403)throw new Error('Google denegó el acceso. Verifica que Drive API esté habilitada y que el ID OAuth corresponda al origen actual.');
+      throw new Error(`Google Drive respondió ${response.status}${detail?`: ${detail}`:''}`);
+    }
+    return response;
+  }
+  async function findDriveFile(previousId){
+    if(previousId){
+      try{
+        const response=await driveFetch(`${DRIVE_API}/${encodeURIComponent(previousId)}?fields=id,name,mimeType,trashed,modifiedTime`);
+        const meta=await response.json();if(meta&&!meta.trashed&&meta.name===DRIVE_FILENAME)return meta;
+      }catch(err){if(!String(err.message).includes('404'))throw err;}
+      localStorage.removeItem(DRIVE_FILE_ID_STORAGE_KEY);driveFileId='';
+    }
+    const q=`name = '${DRIVE_FILENAME.replace(/'/g,"\\'")}' and trashed = false`;
+    const url=`${DRIVE_API}?q=${encodeURIComponent(q)}&spaces=drive&pageSize=100&orderBy=modifiedTime%20desc&fields=files(id,name,mimeType,trashed,modifiedTime)`;
+    const response=await driveFetch(url);const data=await response.json();
+    return (data.files||[]).find(f=>f.name===DRIVE_FILENAME&&!f.trashed)||null;
+  }
+  function localDataExists(){
+    return transactions.length>0||localStorage.getItem(CATEGORY_STORAGE_KEY)!==null||localStorage.getItem(STORAGE_KEY)!==null;
+  }
+  function exportCloudPayload(){return {app:'Mi Balance',version:1,updatedAt:new Date().toISOString(),transactions,categorySets};}
+  function comparablePayload(tx=transactions,cats=categorySets){
+    const cleanTx=validateCloudTransactions(tx).sort((a,b)=>a.id.localeCompare(b.id));
+    return JSON.stringify({transactions:cleanTx,categorySets:{gasto:[...(cats.gasto||[])],ingreso:[...(cats.ingreso||[])]}});
+  }
+  function comparableCloudPayload(data){
+    const cats=data.categorySets||{};
+    const cleanCats={gasto:cleanCategoryList(cats.gasto,DEFAULT_EXPENSE_CATEGORIES),ingreso:cleanCategoryList(cats.ingreso,DEFAULT_INCOME_CATEGORIES)};
+    return comparablePayload(data.transactions,cleanCats);
+  }
+  function validateCloudTransactions(value){
+    if(!Array.isArray(value))throw new Error('El archivo de Drive no contiene una lista válida de movimientos.');
+    return value.filter(t=>t&&typeof t.id==='string'&&['ingreso','gasto'].includes(t.type)&&Number.isFinite(Number(t.amount))&&Number(t.amount)>=0).map(t=>({id:t.id,type:t.type,amount:Math.round(Number(t.amount)),date:String(t.date||''),category:String(t.category||'Otros gastos'),description:String(t.description||''),method:String(t.method||''),createdAt:Number(t.createdAt)||0}));
+  }
+  async function downloadDriveData(fileId){
+    const response=await driveFetch(`${DRIVE_API}/${encodeURIComponent(fileId)}?alt=media`);
+    let data;try{data=await response.json();}catch(err){throw new Error('El archivo de Drive no es un JSON válido.');}
+    if(!data||!Array.isArray(data.transactions)||!data.categorySets)throw new Error('El archivo de Drive no tiene el formato de Mi Balance.');
+    return data;
+  }
+  function applyCloudData(data){
+    const newTransactions=validateCloudTransactions(data.transactions);
+    const cats=data.categorySets||{};
+    applyingDriveState=true;
+    try{
+      transactions=newTransactions;
+      categorySets.gasto=cleanCategoryList(cats.gasto,DEFAULT_EXPENSE_CATEGORIES);
+      categorySets.ingreso=cleanCategoryList(cats.ingreso,DEFAULT_INCOME_CATEGORIES);
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(transactions));
+      localStorage.setItem(CATEGORY_STORAGE_KEY,JSON.stringify(categorySets));
+    }finally{applyingDriveState=false;}
+    renderCategoryManagement();updateCategoryOptions($('typeInput').value,$('categoryInput').value);render();
+  }
+  async function uploadDriveData(fileId=''){
+    const boundary='miBalanceBoundary'+Math.random().toString(16).slice(2);
+    const metadata={name:DRIVE_FILENAME,mimeType:'application/json'};
+    const payload=JSON.stringify(exportCloudPayload());
+    const body=`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${payload}\r\n--${boundary}--`;
+    const url=fileId?`https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(fileId)}?uploadType=multipart&fields=id,name,modifiedTime`:'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime';
+    const method=fileId?'PATCH':'POST';
+    const response=await driveFetch(url,{method,headers:{'Content-Type':`multipart/related; boundary=${boundary}`},body});
+    const file=await response.json();
+    if(!file.id)throw new Error('Drive no devolvió el identificador del archivo.');
+    driveFileId=file.id;localStorage.setItem(DRIVE_FILE_ID_STORAGE_KEY,driveFileId);
+    return file;
+  }
+  function noteDriveSynced(message='Sincronización completada.'){
+    try{localStorage.setItem(DRIVE_LAST_SNAPSHOT_STORAGE_KEY,comparablePayload());}catch(err){}
+    lastDriveSync=new Intl.DateTimeFormat('es-CL',{dateStyle:'short',timeStyle:'short'}).format(new Date());
+    $('driveLastSync').textContent=`Última sincronización: ${lastDriveSync}`;
+    setDriveStatus(message,'good');
+    if($('privacyNote'))$('privacyNote').textContent='▣ Guardado en este navegador y sincronizado con Google Drive.';
+  }
+  async function processDriveSync(purpose='manual'){
+    if(driveBusy)return;driveBusy=true;
+    try{
+      setDriveStatus('Conectando con Google Drive y comprobando el archivo…','warn');
+      const previousId=localStorage.getItem(DRIVE_FILE_ID_STORAGE_KEY)||'';
+      const previousSnapshot=localStorage.getItem(DRIVE_LAST_SNAPSHOT_STORAGE_KEY)||'';
+      const remote=await findDriveFile(previousId);
+      if(!remote){
+        await uploadDriveData('');
+        noteDriveSynced(`Conexión lista. Se creó “${DRIVE_FILENAME}” en tu Google Drive.`);
+        notify('Archivo creado en Google Drive.');
+        return;
+      }
+      const isKnown=!!previousId&&remote.id===previousId;
+      driveFileId=remote.id;localStorage.setItem(DRIVE_FILE_ID_STORAGE_KEY,driveFileId);
+      const cloud=await downloadDriveData(remote.id);
+      const localComparable=comparablePayload();
+      const cloudComparable=comparableCloudPayload(cloud);
+      const hasBaseline=!!previousSnapshot;
+      const localChanged=hasBaseline&&localComparable!==previousSnapshot;
+      const cloudChanged=hasBaseline&&cloudComparable!==previousSnapshot;
+      let action='download';
+      if(isKnown&&hasBaseline){
+        if(localChanged&&!cloudChanged){
+          await uploadDriveData(remote.id);
+          noteDriveSynced('Se detectaron cambios locales pendientes y se subieron a Google Drive.');
+          notify('Cambios locales recuperados y guardados en Drive.');
+          return;
+        }
+        if(localChanged&&cloudChanged&&localComparable!==cloudComparable){
+          const choice=window.prompt(`Los datos locales y los de Drive cambiaron desde la última sincronización.\n\nEscribe D para DESCARGAR los datos de Drive y reemplazar los locales.\n\nEscribe L para SUBIR los datos locales y reemplazar el archivo de Drive.\n\nCancelar deja ambos sin cambios.`,'D');
+          if(choice===null){setDriveStatus('Se detectaron cambios en ambos lados. La sincronización quedó pausada para evitar sobrescribir información.','warn');return;}
+          const normalized=choice.trim().toLocaleUpperCase('es-CL');
+          if(normalized==='L')action='upload';else if(normalized!=='D'){setDriveStatus('Respuesta no reconocida. Escribe D o L al sincronizar.','warn');return;}
+        }else if(!localChanged&&cloudChanged){action='download';}
+        else if(!localChanged&&!cloudChanged){action='download';}
+      }else if(localDataExists()){
+        const choice=window.prompt(`Encontré “${DRIVE_FILENAME}” en Drive, y este navegador también tiene datos.\n\nEscribe D para DESCARGAR los datos de Drive y reemplazar los datos de este navegador.\n\nEscribe L para SUBIR los datos de este navegador y reemplazar el archivo de Drive.\n\nCancelar deja los datos sin cambios.`,'D');
+        if(choice===null){setDriveStatus('Se encontró el archivo en Drive, pero no se eligió qué datos conservar. No se modificó ningún dato.','warn');return;}
+        const normalized=choice.trim().toLocaleUpperCase('es-CL');
+        if(normalized==='L')action='upload';else if(normalized!=='D'){setDriveStatus('Respuesta no reconocida. Escribe D o L al sincronizar.','warn');return;}
+      }
+      if(action==='upload'){
+        await uploadDriveData(remote.id);
+        noteDriveSynced('Conectado. Los datos de este navegador se guardaron en Google Drive.');
+        notify('Datos locales guardados en Drive.');
+      }else{
+        applyCloudData(cloud);
+        noteDriveSynced('Conectado. Se descargaron los datos más recientes de Google Drive.');
+        if(purpose!=='auto')notify('Datos de Google Drive cargados.');
+      }
+    }finally{driveBusy=false;}
+  }
+  function downloadLocalBackup(){
+    const blob=new Blob([JSON.stringify(exportCloudPayload(),null,2)],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`mi-balance-respaldo-${localISO(new Date())}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    notify('Respaldo completo descargado.');
+  }
+  async function importLocalBackup(file){
+    if(!file)return;
+    let data;
+    try{data=JSON.parse(await file.text());}catch(err){notify('El archivo elegido no es un JSON válido.');return;}
+    if(!data||!Array.isArray(data.transactions)||!data.categorySets){notify('Ese archivo no parece ser un respaldo completo de Mi Balance.');return;}
+    if(!window.confirm('Importar el respaldo reemplazará los movimientos y las categorías de este navegador. ¿Continuar?'))return;
+    try{
+      applyCloudData(data);
+      if(driveAccessToken&&driveFileId)scheduleDriveSave();
+      notify('Respaldo importado correctamente.');
+    }catch(err){notify(`No se pudo importar el respaldo: ${err.message}`);}
+  }
+  function scheduleDriveSave(){
+    if(applyingDriveState)return;
+    if(driveSaveTimer)clearTimeout(driveSaveTimer);
+    if(driveAccessToken&&driveFileId){
+      driveSaveTimer=setTimeout(async()=>{
+        try{await uploadDriveData(driveFileId);noteDriveSynced('Los cambios se guardaron en Google Drive automáticamente.');}
+        catch(err){setDriveStatus(`Los cambios están guardados localmente, pero no se pudieron subir: ${err.message}`,'error');}
+      },900);
+    }else if(localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)&&$('privacyNote')){
+      $('privacyNote').textContent='▣ Cambios guardados localmente; conecta Drive para sincronizarlos.';
+    }
+  }
+  async function autoSyncOnOpen(){
+    const configuredId=localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY);
+    const enabled=localStorage.getItem(DRIVE_AUTOSYNC_STORAGE_KEY)!=='false';
+    if(!configuredId||!enabled)return;
+    $('driveClientId').value=configuredId;
+    if(!driveOriginIsSupported())return;
+    try{
+      await initializeDriveTokenClient();
+      driveAuthPurpose='auto';
+      setDriveStatus('Intentando sincronizar automáticamente al abrir la app…','warn');
+      driveTokenClient.requestAccessToken({prompt:'none'});
+      setTimeout(()=>{if(!driveAccessToken&&$('driveStatus').textContent.includes('Intentando'))setDriveStatus('Google necesita una acción del usuario. Abre la pestaña Google Drive y pulsa “Conectar y sincronizar”.','warn');},3500);
+    }catch(err){setDriveStatus(`No se pudo iniciar la sincronización automática: ${err.message}`,'warn');}
+  }
+  function disconnectDriveSession(){
+    driveAccessToken=null;
+    if(driveSaveTimer)clearTimeout(driveSaveTimer);
+    setDriveStatus('Sesión desconectada. El ID y el archivo asociado se conservan; vuelve a conectar para sincronizar.','warn');
+    notify('Se desconectó la sesión de Drive.');
+  }
+
+  function exportCSV(){ const rows=filteredTransactions(); if(!rows.length){notify('No hay movimientos para exportar con los filtros actuales.');return;} const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"'; const data=[['Fecha','Tipo','Descripción','Categoría','Medio de pago','Monto CLP'],...rows.map(t=>[t.date,t.type,t.description,t.category,t.method||'',Math.round(amountOf(t))])].map(row=>row.map(quote).join(';')).join('\r\n'); const blob=new Blob(['\ufeff'+data],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`mi-balance-${$('monthFilter').value||currentMonth}.csv`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); notify('Archivo CSV exportado.'); }
+  $('homeTab').addEventListener('click',()=>showView('home')); $('categoriesTab').addEventListener('click',()=>showView('categories')); $('driveTab').addEventListener('click',()=>showView('drive'));
+  $('saveDriveConfigBtn').addEventListener('click',()=>saveDriveConfiguration(true));
+  $('connectDriveBtn').addEventListener('click',()=>requestDriveAccess('manual',false));
+  $('syncDriveBtn').addEventListener('click',()=>{if(driveAccessToken)processDriveSync('manual').catch(err=>{setDriveStatus(err.message,'error');notify('No se pudo sincronizar.');});else requestDriveAccess('manual',false);});
+  $('disconnectDriveBtn').addEventListener('click',disconnectDriveSession);
+  $('exportBackupBtn').addEventListener('click',downloadLocalBackup);
+  $('importBackupBtn').addEventListener('click',()=>$('importBackupInput').click());
+  $('importBackupInput').addEventListener('change',async event=>{const file=event.target.files&&event.target.files[0];if(file)await importLocalBackup(file);event.target.value='';});
+  $('driveAutoSync').addEventListener('change',()=>{localStorage.setItem(DRIVE_AUTOSYNC_STORAGE_KEY,$('driveAutoSync').checked?'true':'false');notify('Preferencia de sincronización actualizada.');});
+  $('addExpenseCategoryForm').addEventListener('submit',event=>{event.preventDefault();addCategory('gasto','newExpenseCategory');});
+  $('addIncomeCategoryForm').addEventListener('submit',event=>{event.preventDefault();addCategory('ingreso','newIncomeCategory');});
+  $('toggleFormBtn').addEventListener('click',()=>{resetForm();showForm();$('amountInput').focus();}); $('closeFormBtn').addEventListener('click',hideForm); $('cancelFormBtn').addEventListener('click',hideForm); $('expenseTypeBtn').addEventListener('click',()=>chooseType('gasto')); $('incomeTypeBtn').addEventListener('click',()=>chooseType('ingreso')); $('monthFilter').addEventListener('change',()=>{if(!$('formPanel').classList.contains('open'))$('dateInput').value=defaultDateForSelectedMonth();render();}); $('searchInput').addEventListener('input',renderTable); $('exportBtn').addEventListener('click',exportCSV);
+  $('movementForm').addEventListener('submit',event=>{event.preventDefault();const amount=Number($('amountInput').value);const date=$('dateInput').value;const type=$('typeInput').value;const category=$('categoryInput').value;const description=$('descriptionInput').value.trim();if(!Number.isFinite(amount)||amount<=0||!Number.isInteger(amount)){notify('Ingresa un monto válido en pesos enteros.');$('amountInput').focus();return;}if(!date||!description||!category){notify('Completa la fecha, descripción y categoría.');return;}const entry={id:editingId||`${Date.now()}-${Math.random().toString(36).slice(2,9)}`,type,amount:Math.round(amount),date,category,description,method:$('methodInput').value,createdAt:Date.now()};if(editingId){transactions=transactions.map(t=>t.id===editingId?entry:t);notify('Movimiento actualizado.');}else{transactions.push(entry);notify('Movimiento guardado.');}persist();$('monthFilter').value=date.slice(0,7);$('searchInput').value='';render();hideForm();});
+  updateCategoryOptions('gasto'); render();
+  $('driveClientId').value=localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)||'';
+  $('driveAutoSync').checked=localStorage.getItem(DRIVE_AUTOSYNC_STORAGE_KEY)!=='false';
+  refreshDrivePanel();
+  if(localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)&&localStorage.getItem(DRIVE_AUTOSYNC_STORAGE_KEY)!=='false')setTimeout(autoSyncOnOpen,700);
+  if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1')) {
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('No se pudo registrar el modo app:',err)));
+  }
+})();
+</script>
+</body>
+</html>
