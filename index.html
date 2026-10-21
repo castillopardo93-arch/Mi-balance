@@ -450,7 +450,7 @@
   }
   async function initializeDriveTokenClient(){
     const clientId=$('driveClientId').value.trim()||localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)||'';
-    if(!clientId)throw new Error('Primero agrega y guarda el ID de cliente OAuth de Google.');
+    if(!clientId)throw new Error('No está disponible la configuración de Google Drive. Contacta al administrador de la aplicación.');
     if(driveTokenClient&&driveTokenClientId===clientId)return;
     await loadGoogleIdentity();
     driveTokenClientId=clientId;
