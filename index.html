@@ -45,6 +45,67 @@
 #emptyAddBtn {
   display: none !important;
 }
+  
+#mainView {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#mainView > .hero,
+#mainView > .stats {
+  order: 1;
+  margin-bottom: 0;
+}
+
+#mainView > .form-panel {
+  order: 2;
+  margin: 0;
+}
+
+#mainView > .dashboard-section,
+#mainView > .content-grid,
+#mainView .dashboard-grid,
+#mainView .content-grid .side-stack {
+  display: contents;
+}
+
+#mainView .content-grid > section.panel {
+  order: 3;
+  width: 100%;
+}
+
+#mainView .side-stack > section.panel:nth-child(2) {
+  order: 4;
+  width: 100%;
+}
+
+#mainView .dashboard-grid > article:nth-child(3) {
+  order: 5;
+  width: 100%;
+}
+
+#mainView .dashboard-section > .section-heading {
+  order: 6;
+  width: 100%;
+  margin-bottom: -4px;
+}
+
+#mainView .dashboard-grid > article:nth-child(2) {
+  order: 6;
+  width: 100%;
+}
+
+#mainView .dashboard-grid > article:first-child {
+  order: 7;
+  width: 100%;
+}
+
+#mainView .side-stack > section.panel:first-child {
+  order: 8;
+  width: 100%;
+}
+
 </style>
 </head>
 <body>
