@@ -140,10 +140,10 @@
       <article class="panel drive-panel">
         <div class="panel-head"><div><h3>Conexión y sincronización</h3><p>El archivo de datos se llamará “Mi Balance - datos.json”.</p></div></div>
         <div class="drive-panel-body">
-          <div id="driveStatus" class="drive-status warn" role="status" aria-live="polite">Configura tu ID de cliente de Google para habilitar la conexión.</div>
-          <div class="drive-field"><label for="driveClientId">ID de cliente OAuth de Google</label><input id="driveClientId" type="text" autocomplete="off" spellcheck="false" readonly aria-readonly="true" placeholder="ID de Google ya configurado"></div>
+          <div id="driveStatus" class="drive-status warn" role="status" aria-live="polite">Conecta tu cuenta de Google Drive para sincronizar tus datos.</div>
+          <input id="driveClientId" type="hidden" autocomplete="off" value="">
           <label class="drive-check"><input id="driveAutoSync" type="checkbox" checked><span><strong>Intentar sincronizar al abrir la app.</strong><br>Si Google no permite la autorización silenciosa, se mostrará un aviso para conectar manualmente.</span></label>
-          <div class="drive-actions"><button id="saveDriveConfigBtn" class="btn btn-secondary" type="button">Guardar configuración</button><button id="connectDriveBtn" class="btn btn-primary" type="button">Conectar y sincronizar</button><button id="syncDriveBtn" class="btn btn-secondary" type="button">Sincronizar ahora</button><button id="disconnectDriveBtn" class="btn btn-secondary" type="button">Desconectar sesión</button></div>
+          <div class="drive-actions"><button id="connectDriveBtn" class="btn btn-primary" type="button">Conectar Google Drive</button><button id="syncDriveBtn" class="btn btn-secondary" type="button">Sincronizar ahora</button><button id="disconnectDriveBtn" class="btn btn-secondary" type="button">Desconectar</button></div>
           <div class="drive-actions" style="margin-top:10px"><button id="exportBackupBtn" class="btn btn-secondary" type="button">↓ Descargar respaldo completo</button><button id="importBackupBtn" class="btn btn-secondary" type="button">↑ Importar respaldo JSON</button><input id="importBackupInput" class="hidden" type="file" accept="application/json,.json"></div>
           <p class="drive-foot">El respaldo JSON incluye todos los movimientos y las categorías personalizadas. Úsalo para trasladar los datos al navegador nuevo antes de activar Drive.</p>
           <div id="driveLastSync" class="drive-last-sync">Todavía no se ha sincronizado con Drive.</div>
@@ -151,14 +151,7 @@
         </div>
       </article>
       <article class="panel drive-panel">
-        <div class="panel-head"><div><h3>Configuración inicial</h3><p>Se realiza una sola vez en tu cuenta de Google.</p></div></div>
-        <div class="drive-steps">
-          <div class="drive-step"><span class="drive-step-number">1</span><div><strong>Prepara la app para ejecutarse como sitio web</strong><p>No basta con abrir el archivo directamente (<span class="drive-code">file://</span>). En Windows puedes poner el HTML en una carpeta, abrir PowerShell en esa carpeta, ejecutar <span class="drive-code">py -m http.server 8000</span> y visitar <span class="drive-code">http://localhost:8000/mi_balance.html</span>.</p></div></div>
-          <div class="drive-step"><span class="drive-step-number">2</span><div><strong>Crea un ID de cliente OAuth</strong><p>En <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">Google Cloud Console → Credenciales</a>, crea un cliente OAuth de tipo “Aplicación web”. En “Orígenes autorizados de JavaScript”, agrega <span class="drive-code">http://localhost:8000</span> (o el dominio HTTPS en que alojes la app).</p></div></div>
-          <div class="drive-step"><span class="drive-step-number">3</span><div><strong>Habilita Google Drive API</strong><p>En el mismo proyecto habilita “Google Drive API”, configura la pantalla de consentimiento OAuth y copia el ID de cliente en el campo de esta pantalla. No ingreses un secreto de cliente.</p></div></div>
-          <div class="drive-step"><span class="drive-step-number">4</span><div><strong>Conecta, y elige qué datos conservar</strong><p>La primera vez, si ya existe un archivo de datos en Drive y también hay datos locales, la app te preguntará si prefieres descargar los de Drive o reemplazar el archivo de Drive con los de este computador.</p></div></div>
-        </div>
-        <div class="panel-head"><p>Guía oficial de Google: <a href="https://developers.google.com/workspace/drive/api/quickstart/js?hl=es-419" target="_blank" rel="noopener noreferrer">Configurar Drive API para JavaScript</a>.</p></div>
+        <div class="panel-head"><div><h3>Tu información, tu cuenta</h3><p>Conecta tu cuenta personal de Google para guardar tus movimientos en tu propio Drive. Mi Balance no necesita mostrar datos técnicos para sincronizar.</p></div></div>
       </article>
     </div>
   </section>
@@ -424,7 +417,7 @@
     if(location.protocol==='file:') setDriveStatus('La app está abierta como archivo local. Para conectar Drive, sírvela desde http://localhost:8000 o desde un sitio HTTPS y registra ese origen en Google Cloud.','warn');
     else if(driveAccessToken&&driveFileId) setDriveStatus('Conectado a Google Drive. Los cambios se sincronizan automáticamente mientras el acceso siga autorizado.','good');
     else if(localStorage.getItem(DRIVE_CLIENT_STORAGE_KEY)) setDriveStatus('ID de cliente guardado. Conecta tu cuenta para leer y actualizar el archivo de Drive.','warn');
-    else setDriveStatus('Configura tu ID de cliente de Google para habilitar la conexión.','warn');
+    else setDriveStatus('Conecta tu cuenta de Google Drive para sincronizar tus datos.','warn');
   }
   function driveOriginIsSupported(){
     if(location.protocol==='https:')return true;
@@ -682,7 +675,6 @@
 
   function exportCSV(){ const rows=filteredTransactions(); if(!rows.length){notify('No hay movimientos para exportar con los filtros actuales.');return;} const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"'; const data=[['Fecha','Tipo','Descripción','Categoría','Medio de pago','Monto CLP'],...rows.map(t=>[t.date,t.type,t.description,t.category,t.method||'',Math.round(amountOf(t))])].map(row=>row.map(quote).join(';')).join('\r\n'); const blob=new Blob(['\ufeff'+data],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`mi-balance-${$('monthFilter').value||currentMonth}.csv`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); notify('Archivo CSV exportado.'); }
   $('homeTab').addEventListener('click',()=>showView('home')); $('categoriesTab').addEventListener('click',()=>showView('categories')); $('driveTab').addEventListener('click',()=>showView('drive'));
-  $('saveDriveConfigBtn').addEventListener('click',()=>saveDriveConfiguration(true));
   $('connectDriveBtn').addEventListener('click',()=>requestDriveAccess('manual',false));
   $('syncDriveBtn').addEventListener('click',()=>{if(driveAccessToken)processDriveSync('manual').catch(err=>{setDriveStatus(err.message,'error');notify('No se pudo sincronizar.');});else requestDriveAccess('manual',false);});
   $('disconnectDriveBtn').addEventListener('click',disconnectDriveSession);
