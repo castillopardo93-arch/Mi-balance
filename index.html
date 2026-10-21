@@ -53,7 +53,7 @@
       <label class="month-wrap">◷ <span>Mes</span> <input id="monthFilter" type="month" aria-label="Seleccionar mes"></label>
       <button class="btn btn-secondary" id="exportBtn" type="button">↓ Exportar CSV</button>
       <button class="btn btn-secondary" id="shareAppBtn" type="button" onclick="if (navigator.share) { navigator.share({title: 'Mi Balance', text: 'Conoce Mi Balance, una app para organizar tus ingresos y gastos.', url: window.location.origin + window.location.pathname}).catch(function(e) { if (e.name !== 'AbortError') window.prompt('Copia este enlace para compartir Mi Balance:', window.location.origin + window.location.pathname); }); } else { window.prompt('Copia este enlace para compartir Mi Balance:', window.location.origin + window.location.pathname); }">↗ Compartir app</button>
-      <button class="btn btn-primary" id="toggleFormBtn" type="button">＋ Agregar movimiento</button>
+      <h3>Movimientos</h3>
     </div>
   </header>
 
