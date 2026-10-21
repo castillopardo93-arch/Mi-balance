@@ -325,6 +325,53 @@
     if(spendRatio===null){insights.push({icon:'%',label:'Ingresos utilizados',value:'No calculable aún',detail:'Registra ingresos para medir qué parte se destina a gastos.',className:'insight-neutral'});}
     else {const ratioClass=spendRatio>100?'insight-negative':spendRatio<=75?'insight-positive':'insight-neutral';insights.push({icon:'%',label:'Ingresos utilizados',value:`${spendRatio}%`,detail:spendRatio>100?'Tus gastos superan los ingresos de este mes.':`${Math.max(0,100-spendRatio)}% de tus ingresos queda después de los gastos.`,className:ratioClass});}
     root.innerHTML=insights.map(i=>`<div class="insight-row"><div class="insight-icon" aria-hidden="true">${escapeHTML(i.icon)}</div><div><div class="insight-label">${escapeHTML(i.label)}</div><div class="insight-value ${i.className}">${escapeHTML(i.value)}</div><div class="insight-detail">${escapeHTML(i.detail)}</div></div></div>`).join('');
+  
+    const paymentRoot = $('paymentMethodBreakdown');
+
+    if (paymentRoot) {
+      const paymentTotals = {};
+
+      expenses.forEach(t => {
+        const method = String(t.method || '').trim() || 'No especificado';
+        paymentTotals[method] =
+          (paymentTotals[method] || 0) + amountOf(t);
+      });
+
+      const paymentEntries = Object.entries(paymentTotals)
+        .sort((a, b) => b[1] - a[1]);
+
+      const paymentTotal = paymentEntries.reduce(
+        (total, entry) => total + entry[1], 0
+      );
+
+      if (!paymentEntries.length || paymentTotal <= 0) {
+        paymentRoot.innerHTML =
+          '<div class="muted-message">Aún no hay gastos registrados para este mes.</div>';
+      } else {
+        paymentRoot.innerHTML =
+          `<div class="muted-message">Total de gastos: <b>${money(paymentTotal)}</b></div>
+          <div class="category-list">${
+            paymentEntries.map(([method, value], index) => {
+              const percentage = value / paymentTotal * 100;
+              const color = PALETTE[index % PALETTE.length];
+
+              return `<div>
+                <div class="category-line-head">
+                  <div class="category-label">
+                    <span style="color:${color}">●</span>
+                    <span>${escapeHTML(method)}</span>
+                  </div>
+                  <div class="category-value">${money(value)} · ${Math.round(percentage)}%</div>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" style="width:${percentage}%;background:${color}"></div>
+                </div>
+              </div>`;
+            }).join('')
+          }</div>`;
+      }
+    }
+
   }
 
   function showView(view){
